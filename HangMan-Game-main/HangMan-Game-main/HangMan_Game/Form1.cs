@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -56,7 +57,7 @@ namespace HangMan_Game
             string word = GetRandomWord(); // Assume GetRandomWord() returns a valid random word.
             char[] chars = word.ToCharArray();
 
-            int spacing = 400 / chars.Length; // Calculate spacing based on word length.
+            int spacing = 950 / chars.Length; // Calculate spacing based on word length.
 
             for (int i = 0; i < chars.Length; i++) // Loop through all characters.
             {
@@ -64,6 +65,8 @@ namespace HangMan_Game
                 label.Location = new Point(i * spacing + 10, 80); // Set the label's position.
                 label.Text = "_"; // Set the label's text.
                 groupBox1.Controls.Add(label); // Add the label to groupBox1 controls.
+
+                
 
                 // Optionally, you can store the labels in a list if needed.
                 labels.Add(label);
@@ -76,7 +79,6 @@ namespace HangMan_Game
         {
             GetRandomWord();
             MakeLabels();
-
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -89,57 +91,105 @@ namespace HangMan_Game
             if (word.Contains(letter))
             {
                 char[] letters = word.ToCharArray();
+                bool allLettersGuessed = true; // Initialize a flag to check if all letters are guessed.
+
                 for (int i = 0; i < letters.Length; i++)
                 {
                     if (letters[i] == letter)
+                    {
                         labels[i].Text = letter.ToString();
+                    }
 
+                    // Check if there are any underscores left.
+                    if (labels[i].Text == "_")
+                    {
+                        allLettersGuessed = false; // Set the flag to false if there's an underscore.
+                    }
                 }
-                foreach (Label l in labels)
-                    if (l.Text == "_") return;
-                MessageBox.Show(" You have WON!", " CONGRATS!");
+
+                // Check if all letters are guessed.
+                if (allLettersGuessed)
+                {
+                    MessageBox.Show("You have WON!", "CONGRATS!");
+                }
             }
             else
             {
                 MessageBox.Show("The Letter you Guessed is not in the Word", "SORRY");
                 label2.Text += " " + letter.ToString() + ","; // Add the guessed letter to label2.
                 amount++; // Increase the number of incorrect guesses.
+                
 
                 // Determine which image (pictureBox) to display based on the number of incorrect guesses.
                 if (amount >= 1)
                 {
                     pictureBox1.Visible = true; // Show the first stage image.
                 }
-                else if (amount >= 2)
+                
+                if (amount >= 2)
                 {
+                    pictureBox1.Visible = false;
                     pictureBoxStage2.Visible = true; // Show the second stage image.
+
                 }
-                else if (amount >= 3)
+                if (amount >= 3)
                 {
+                    pictureBox1.Visible = false;
+                    pictureBoxStage2.Visible = false;
                     pictureBoxStage3.Visible = true; // Show the third stage image.
                 }
-                else if (amount >= 4)
+                if (amount >= 4)
                 {
+                    pictureBox1.Visible = false;
+                    pictureBoxStage2.Visible = false;
+                    pictureBoxStage3.Visible = false;
                     pictureBoxStage4.Visible = true; // Show the fourth stage image.
                 }
-                else if (amount >= 5)
+                if (amount >= 5)
                 {
+                    pictureBox1.Visible = false;
+                    pictureBoxStage2.Visible = false;
+                    pictureBoxStage3.Visible = false;
+                    pictureBoxStage4.Visible = false;
                     pictureBoxStage5.Visible = true; // Show the fifth stage image.
                 }
-                else if (amount >= 6)
+                if (amount >= 6)
                 {
+                    pictureBox1.Visible = false;
+                    pictureBoxStage2.Visible = false;
+                    pictureBoxStage3.Visible = false;
+                    pictureBoxStage4.Visible = false;
+                    pictureBoxStage5.Visible = false;
                     pictureBoxStage6.Visible = true; // Show the sixth stage image.
                 }
-                else if (amount >= 7)
+                if (amount >= 7)
                 {
+                    pictureBox1.Visible = false;
+                    pictureBoxStage2.Visible = false;
+                    pictureBoxStage3.Visible = false;
+                    pictureBoxStage4.Visible = false;
+                    pictureBoxStage5.Visible = false;
+                    pictureBoxStage6.Visible = false;
                     pictureBoxStage7.Visible = true; // Show the seventh stage image.
                 }
-                else
+                if (amount >= 8)
                 {
+                    pictureBox1.Visible = false;
+                    pictureBoxStage2.Visible = false;
+                    pictureBoxStage3.Visible = false;
+                    pictureBoxStage4.Visible = false;
+                    pictureBoxStage5.Visible = false;
+                    pictureBoxStage6.Visible = false;
+                    pictureBoxStage7.Visible = false;
                     pictureBoxStage8.Visible = true; // Show the eighth stage image.
                 }
 
+                if (amount == 9)
+                {
+                    this.Hide();
+                    MessageBox.Show("SORRY you Lost! The word was " + GetRandomWord());
 
+                }
             }
         }
 
@@ -162,7 +212,25 @@ namespace HangMan_Game
                 }
             }
         }
-        
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Game has Started");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+           DialogResult option = MessageBox.Show("Game has stopped", "Stop", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if(option == DialogResult.Yes)
+            {
+                this.Close();
+            }
+            else
+            {
+                this.Show();
+            }
+        }
     }
      
 }
